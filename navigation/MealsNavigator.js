@@ -109,6 +109,15 @@ const FilterNavigator = createStackNavigator(
               />
             </HeaderButtons>
           ),
+          headerRight: (
+            <HeaderButtons HeaderButtonComponent={HeaderButton}>
+              <Item
+                title="Save"
+                iconName="ios-save"
+                onPress={navData.navigation.getParam("save")}
+              />
+            </HeaderButtons>
+          ),
         };
       },
     },
