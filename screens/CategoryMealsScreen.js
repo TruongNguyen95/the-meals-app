@@ -1,24 +1,53 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 
-const CategoryMealsScreen = (props) => {
-  return (
-    <View style={styles.screen}>
-      <Text>The Category Meals Screen!</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => {
-          props.navigation.navigate("MealDetail");
+import { CATEGORIES, MEALS } from "../data/dummy-data";
+import MealItem from "../components/MealItem";
+
+const CategoryMealScreen = (props) => {
+  const renderMealItem = (itemData) => {
+    return (
+      <MealItem
+        title={itemData.item.title}
+        image={itemData.item.imageUrl}
+        duration={itemData.item.duration}
+        complexity={itemData.item.complexity}
+        affordability={itemData.item.affordability}
+        onSelectMeal={() => {
+          props.navigation.navigate("MealDetail", {
+            mealId: itemData.item.id,
+          });
         }}
       />
-      <Button
-        title="Go Back"
-        onPress={() => {
-          props.navigation.pop();
-        }}
+    );
+  };
+
+  const catId = props.navigation.getParam("categoryId");
+
+  const displayedMeals = MEALS.filter(
+    (meal) => meal.categoryIds.indexOf(catId) >= 0
+  );
+
+  return (
+    <View style={styles.screen}>
+      <FlatList
+        data={displayedMeals}
+        keyExtractor={(item, _index) => item.id}
+        renderItem={renderMealItem}
+        style={{ width: "100%" }}
       />
     </View>
   );
+};
+
+CategoryMealScreen.navigationOptions = (navigationData) => {
+  const catId = navigationData.navigation.getParam("categoryId");
+
+  const selectedCategory = CATEGORIES.find((cat) => cat.id === catId);
+
+  return {
+    headerTitle: selectedCategory.title,
+  };
 };
 
 const styles = StyleSheet.create({
@@ -26,7 +55,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 15,
   },
 });
 
-export default CategoryMealsScreen;
+export default CategoryMealScreen;
