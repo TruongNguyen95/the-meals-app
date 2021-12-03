@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, Switch, Platform } from "react-native";
+import { useDispatch } from "react-redux";
 
 import Colors from "../constants/Color";
+import { setFilters } from "../store/actions/meals";
 
 const FilterSwitch = (props) => {
   return (
@@ -20,6 +22,7 @@ const FilterSwitch = (props) => {
 const FiltersScreen = (props) => {
   const { navigation } = props;
 
+  const dispatch = useDispatch();
   const [isGlutenFree, setIsGlutenFree] = useState(false);
   const [isLactoseFree, setIsLactoseFree] = useState(false);
   const [isVegan, setIsVegan] = useState(false);
@@ -32,6 +35,7 @@ const FiltersScreen = (props) => {
       vegan: isVegan,
       vegetatian: isVegetarian,
     };
+    dispatch(setFilters(appliedFilters));
   }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
 
   useEffect(() => {
